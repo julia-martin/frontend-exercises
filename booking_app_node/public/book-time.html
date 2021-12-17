@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book Time Slot</title>
+    <style>
+      form div {
+        margin: 10px;
+      }
+
+      input[name="email"] {
+        width: 200px;
+      }
+
+      input[type="submit"] {
+        margin: 10px;
+      }
+
+      #new-student {
+        background-color: lightgray;
+        visibility: hidden;
+      }
+    </style>
+    <script>
+      const controller = new AbortController();
+      const {signal} = controller;
+      let timeout = setTimeout(() => controller.abort(), 5000);
+
+      function createOption(schedule, staffs) {
+        let option = document.createElement('option');
+        let name = staffs.find(staff => staff.id === schedule.staff_id).name;
+        option.textContent = `${name } | ${schedule.date} | ${schedule.time} `;
+        option.id = schedule.id;
+        document.querySelector('select').appendChild(option);
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        let response = await fetch('/api/staff_members');
+        let staffs = await response.json();
+        let schedules;
+        fetch('/api/schedules', {signal})
+          .then(response => response.json())
+          .then(json => {
+            clearTimeout(timeout);
+            json.filter(schedule => !schedule.student_email)
+              .forEach(schedule => createOption(schedule, staffs));
+          })
+          .catch(e => {
+            if (e.name === 'AbortError') {
+              alert("Request took too long. Please try again.");
+            }
+          });
+
+        let form = document.querySelector('form');
+        let newStudentForm = document.getElementById('new-student');
+
+        async function handleSubmitBooking(e) {
+          e.preventDefault();
+
+          let data = {};
+          let select = document.querySelector('select');
+          data.id = select.options[select.selectedIndex].id;
+          data.student_email = document.getElementById('email').value;
+          let response = await fetch('/api/bookings', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+          if (response.ok) {
+            alert("Booked");
+            form.reset();
+          } else {
+            let responseText = await response.text();
+            alert(responseText);
+            if (responseText.indexOf('booking_sequence') > -1) {
+              newStudentForm.style.visibility = 'visible';
+            }
+          }
+        }
+
+        form.addEventListener('submit', handleSubmitBooking);
+
+        newStudentForm.addEventListener('submit', async e => {
+          e.preventDefault();
+
+          let data = {};
+          data.email = newStudentForm.querySelector('input[name="email"]').value;
+          data.name = newStudentForm.querySelector('input[name="name"]').value;
+          data.booking_sequence = newStudentForm.querySelector('input[name="booking-seq"]').value;
+          let response = await fetch('/api/students', {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+          alert(await response.text());
+          if (response.ok) {
+            handleSubmitBooking(e);
+            newStudentForm.reset();
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Schedules</h1>
+    <form action='api/bookings' method='post'>
+      <div>
+        <label for="schedule">Please select one schedule</label>
+        <select name="schedule"></select>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email">
+      </div>
+      <input type="submit">
+    </form>
+    <form id="new-student" action="/api/students" method="post">
+      <h1>Please provide new student details</h1>
+      <div>
+        <label for="email">Email:</label>
+        <input type="text" name="email">
+      </div>
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" name="name">
+      </div>
+      <div>
+        <label for="booking-seq">Booking Sequence:</label>
+        <input type="text" name="booking-seq">
+      </div>
+      <input type="submit">
+    </form>
+
+  </body>
+</html>

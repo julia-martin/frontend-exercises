@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Getting Schedules</title>
+    <script>
+      function getSchedules() {
+        const controller = new AbortController();
+        const {signal} = controller;
+        let timeout = setTimeout(() => controller.abort(), 5000);
+
+        fetch('/api/schedules', { signal })
+          .then(response => response.json())
+          .then(json => {
+            clearTimeout(timeout);
+            showSchedules(json);
+          })
+          .catch(e => alert("Request took too long. Please try again."))
+          .finally(() => alert('Finished.'));
+      }
+
+      function showSchedules(schedules) {
+        let counts = {};
+        schedules.forEach(sched => {
+          let id = sched.staff_id;
+          counts[id] = (counts[id] || 0) + 1;
+        });
+        let result = '';
+        for (let key in counts) {
+          result += `staff ${key}: ${counts[key]}\n`;
+        }
+        alert(result);
+      }
+
+      getSchedules();
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>

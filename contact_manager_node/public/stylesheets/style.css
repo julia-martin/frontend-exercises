@@ -1,0 +1,128 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+header {
+  background-color: purple;
+  color: white;
+  text-align: center;
+  height: 120px;
+}
+
+h1 {
+  padding: 20px;
+}
+
+.controls {
+  background-color: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  padding: 10px;
+}
+
+button {
+  background-color: white;
+  border: 1px solid purple;
+  border-radius: 5px;
+  color: purple;
+  padding: 5px;
+}
+
+button.add {
+  border: 1px solid purple;
+  border-radius: 5px;
+  color: purple;
+  font-size: 1.2rem;
+  height: 50px;
+  width: 150px;
+}
+
+select {
+  border-radius: 5px;
+  height: 30px;
+}
+
+.search {
+  border: 1px solid gray;
+  border-radius: 5px;
+  height: 30px;
+  width: 200px;
+  padding: 5px;
+}
+
+.contacts-list {
+  margin: 10px 20px;
+}
+
+.contact-card {
+  border: 1px dotted lightgray;
+  display: inline-block;
+  overflow: auto;
+  padding: 10px;
+  height: 320px;
+  width: 200px;
+  vertical-align: top;
+}
+
+.contact-card h2 {
+  margin: 20px 0;
+}
+
+.contact-card .label {
+  font-weight: bold;
+}
+
+.contact-card button {
+  background-color: white;
+  margin: 10px 5px;
+  height: 30px;
+  width: 50px;
+}
+
+button:hover {
+  background-color: purple;
+  color: white;
+  cursor: pointer;
+}
+
+.fullpage {
+  background-color: white;
+  display: none;
+  position: fixed;
+  text-align: center;
+  top: 120px;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+}
+
+.fullpage h2 {
+  border-bottom: 1px solid lightgray;
+  padding: 30px;
+  margin: 30px;
+}
+
+.field {
+  margin: 25px;
+}
+
+.fullpage input[type='text'] {
+  height: 20px;
+  width: 50%;
+}
+
+.fullpage button {
+  margin: 0 20px;
+  width: 80px;
+}
+
+.tags {
+  list-style-type: none;
+}

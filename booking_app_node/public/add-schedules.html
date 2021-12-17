@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Schedules</title>
+    <style>
+      #add-more, input[type='submit'] {
+        color: white;
+        border: none;
+        border-radius: 10px;
+        height: 50px;
+        width: 100px;
+      }
+
+      #add-more {
+        background-color: skyblue;
+      }
+
+      input[type='submit'] {
+        background-color: crimson;
+      }
+
+      fieldset {
+        margin: 15px 0;
+      }
+
+      legend {
+        font: 15pt/0;
+      }
+
+      li {
+        list-style-type: none;
+        margin: 10px;
+      }
+
+      dt {
+        color: crimson;
+        font-weight: bold;
+        display: inline-block;
+      }
+
+      dd {
+        display: inline-block;
+        margin-left: 5px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script id="schedule-template" type="text/x-handlebars">
+      <legend>Schedule {{count}}</legend>
+        <dl>
+          <ul>
+            <li>
+              <dt>Staff Name :</dt>
+              <dd>
+                <select class="staff-name" name="staff-name">
+                  {{#each staff}}
+                    <option value="{{name}}">{{name}}</option>
+                  {{/each}}
+                </select>
+              </dd>
+            </li>
+            <li>
+              <dt>Date :</dt>
+              <dd>
+                <input type="text" class="date" name="date" placeholder="mm-dd-yy">
+              </dd>
+            </li>
+            <li>
+              <dt>Time :</dt>
+              <dd>
+                <input type="text" class="time" name="time" placeholder="hh:mm">
+              </dd>
+            </li>
+          </ul>
+        </dl>
+    </script>
+    <script>
+      let scheduleTemplate = Handlebars.compile(document.getElementById('schedule-template').innerHTML);
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        let count = 1;
+        let form = document.querySelector('form');
+        let submitBtn = document.querySelector('input[type="submit"]');
+        let response = await fetch('/api/staff_members');
+        let staff = await response.json();
+
+        function addSchedule(staff) {
+          let container = document.createElement('fieldset');
+          container.innerHTML = scheduleTemplate({count: count, staff: staff});
+          form.insertBefore(container, submitBtn);
+          count++;
+        }
+        addSchedule(staff);
+
+        document.getElementById('add-more').addEventListener('click', e => {
+          addSchedule(staff);
+        });
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          let data = {};
+          data.schedules = [];
+          form.querySelectorAll('fieldset').forEach(schedule => {
+            let schedData = {};
+            let staffName = schedule.querySelector('select').value;
+            schedData.staff_id = staff.find(elem => elem.name === staffName).id;
+            schedData.date = schedule.querySelector('.date').value;
+            schedData.time = schedule.querySelector('.time').value;
+            data.schedules.push(schedData);
+          });
+
+          let response = await fetch('/api/schedules', {
+            method: "POST",
+            headers: {
+              "Content-Type": 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+          if (response.ok) {
+            form.reset();
+            alert('Schedules added!');
+          } else {
+            alert(await response.text());
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <button type="button" id="add-more">Add more schedules</button>
+    <form action="/api/schedules" method="post">
+      <!-- template goes here -->
+      <input type="submit">
+    </form>
+  </body>
+</html>

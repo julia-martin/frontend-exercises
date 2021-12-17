@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cancel Schedule or Booking</title>
+    <script>
+      async function cancelSchedule(scheduleId) {
+        let response = await fetch(`/api/schedules/${scheduleId}`, { method: 'DELETE' });
+        if (response.ok) {
+          alert("Success");
+        } else {
+          let text = await response.text();
+          alert(text);
+        }
+      }
+
+      async function cancelBooking(bookingId) {
+        let response = await fetch(`/api/bookings/${bookingId}`, { method: 'PUT' });
+        if (response.ok) {
+          alert("Success");
+        } else {
+          let text = await response.text();
+          alert(text);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        let scheduleForm = document.getElementById('cancel-schedule');
+        let bookingForm = document.getElementById('cancel-booking');
+
+        scheduleForm.addEventListener('submit', e => {
+          e.preventDefault();
+          let scheduleId = document.getElementById('scheduleId').value;
+          cancelSchedule(scheduleId);
+          scheduleForm.reset();
+        });
+
+        bookingForm.addEventListener('submit', e => {
+          e.preventDefault();
+          let bookingId = document.getElementById('bookingId').value;
+          cancelBooking(bookingId);
+          bookingForm.reset();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form id='cancel-schedule'>
+      <label for='scheduleId'>Schedule ID</label>
+      <input type="text" name="scheduleId" id="scheduleId">
+      <input type='submit'>
+    </form>
+    <form id='cancel-booking'>
+      <label for='bookingId'>Booking ID</label>
+      <input type="text" name="bookingId" id="bookingId">
+      <input type="submit">
+    </form>
+  </body>
+</html>

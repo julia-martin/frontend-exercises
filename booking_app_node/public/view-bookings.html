@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bookings</title>
+    <script>
+      function addDates(dates) {
+        dates.forEach(date => {
+          let elem = document.createElement('li');
+          elem.textContent = date;
+          document.querySelector('ul').appendChild(elem);
+          elem.addEventListener('click', showBookings);
+        });
+      }
+
+      async function showBookings(e) {
+        let ul = document.createElement('ul')
+        e.target.appendChild(ul);
+        let response = await fetch(`api/bookings/${e.target.textContent}`)
+        let json = await response.json();
+        json.forEach(booking => {
+          let elem = document.createElement('li');
+          elem.textContent = `${booking[0]} | ${booking[1]} | ${booking[2]}`;
+          ul.appendChild(elem);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        fetch('api/bookings')
+          .then(response => response.json())
+          .then(json => addDates(json));
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Bookings</h1>
+    <ul>
+
+    </ul>
+  </body>
+</html>

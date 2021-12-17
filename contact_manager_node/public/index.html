@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Contact Manager</title>
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script src="/javascripts/handlebars.js"></script>
+  <script id='contacts' type="text/x-handlebars">
+    <li class='contact-card' data-id={{id}}>
+      <h2 class="full_name">{{full_name}}</h2>
+      <p class="label">Phone Number:</p>
+      <p class="phone_number">{{phone_number}}</p><br/>
+      <p class="label">Email:</p>
+      <p class="email">{{email}}</p><br/>
+      <p class="label">Tags:</p>
+      <p class="tags">{{tags}}</p><br/>
+      <button type="button" class="edit">Edit</button>
+      <button type="button" class="delete">Delete</button>
+    </li>
+  </script>
+  <script type="module" src='javascripts/app.js'></script>
+</head>
+<body>
+  <header>
+    <h1>Contact Manager</h1>
+  </header>
+  <main>
+    <div class="controls">
+      <button class="add" type='button'>Add Contact</button>
+      <form class="filter-tag">
+        <label for="filter">Filter by tag:</label>
+        <select name="filter">
+          <option value="all">All</option>
+          <option value="work">Work</option>
+          <option value="business">Business</option>
+          <option value="family">Family</option>
+          <option value="friend">Friend</option>
+          <option value="other">Other</option>
+        </select>
+      </form>
+      <input class="search" type="text" placeholder="Search">
+    </div>
+    <ul class="contacts-list">
+      <!-- Handlebars template goes here -->
+    </ul>
+    <!-- Pages for add contact and edit contact: -->
+    <div class='fullpage add-contact'>
+      <h2>Create Contact</h2>
+      <form method='post' action='/api/contacts'>
+        <div class="field">
+          <label for="full_name">Full name: </label>
+          <input type="text" name="full_name">
+        </div>
+        <div class="field">
+          <label for="email">Email address: </label>
+          <input type="text" name="email">
+        </div>
+        <div class="field">
+          <label for="phone_number">Telephone number: </label>
+          <input type="text" name="phone_number">
+        </div>
+        <div class="field">
+          <label for="tags">Tags: </label>
+           <ul class="tags">
+            <li>
+              <input type="checkbox" name="work" value="work">
+              <label for="work">Work</label>
+            </li>
+            <li>
+              <input type="checkbox" name="business" value="business">
+              <label for="business">Business</label>
+            </li>
+            <li>
+              <input type="checkbox" name="friend" value="friend">
+              <label for="friend">Friend</label>
+            </li>
+            <li>
+              <input type="checkbox" name="family" value="family">
+              <label for="family">Family</label>
+            </li>
+            <li>
+              <input type="checkbox" name="other" value="other">
+              <label for="other">Other</label>
+            </li>
+          </ul>
+        </div>
+        <button type="submit">Submit</button>
+        <button type="reset" class='cancel'>Cancel</button>
+      </form>
+    </div>
+    <div class='fullpage edit-contact'>
+      <h2>Edit Contact</h2>
+      <form method='post'>
+        <div class="field">
+          <label for="full_name">Full name: </label>
+          <input type="text" name="full_name">
+        </div>
+        <div class="field">
+          <label for="email">Email address: </label>
+          <input type="text" name="email">
+        </div>
+        <div class="field">
+          <label for="phone_number">Telephone number: </label>
+          <input type="text" name="phone_number">
+        </div>
+        <div class="field">
+           <label for="tags">Tags: </label>
+           <ul class="tags">
+            <li>
+              <input type="checkbox" name="work" value="work">
+              <label for="work">Work</label>
+            </li>
+            <li>
+              <input type="checkbox" name="business" value="business">
+              <label for="business">Business</label>
+            </li>
+            <li>
+              <input type="checkbox" name="friend" value="friend">
+              <label for="friend">Friend</label>
+            </li>
+            <li>
+              <input type="checkbox" name="family" value="family">
+              <label for="family">Family</label>
+            </li>
+            <li>
+              <input type="checkbox" name="other" value="other">
+              <label for="other">Other</label>
+            </li>
+          </ul>
+        </div>
+        <button type="submit">Submit</button>
+        <button type="reset" class='cancel'>Cancel</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

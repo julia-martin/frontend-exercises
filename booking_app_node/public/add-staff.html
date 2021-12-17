@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Staff</title>
+    <style>
+      div {
+        border: 2px solid lightgray;
+        padding: 10px 50px;
+      }
+
+      label {
+        display: block;
+        color: hotpink;
+        font-weight: bold;
+      }
+      input[type='submit'] {
+        display: block;
+        color: white;
+        background-color: hotpink;
+        border-radius: 10px;
+        height: 50px;
+        width: 80px;
+        margin: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        let form = document.querySelector('form');
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          let email = document.getElementById('email').value;
+          let name = document.getElementById('name').value;
+          data = {email: email, name: name};
+          fetch('/api/staff_members', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => alert(response.statusText));
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form id='staff-form' action="/api/staff_members" method="post">
+      <fieldset>
+        <div id='form-inputs'>
+          <label>
+            <p>Email :</p>
+            <input type="text" name="email" id="email">
+          </label>
+          <label>
+            <p>Name :</p>
+            <input type="text" name="name" id="name">
+          </label>
+        </div>
+        <input id='submit' type="submit">
+      </fieldset>
+    </form>
+  </body>
+</html>
